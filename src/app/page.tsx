@@ -1,103 +1,86 @@
-import Image from "next/image";
+import { Hero } from "@/components/hero";
+import { Hero2 } from "@/components/hero2";
+import { SectionHeading } from "@/components/section-heading";
+import { ProductCard } from "@/components/product-card";
+import { fetchCollectionsWithDesigns, fetchDesigns } from "@/lib/strapi";
 
-export default function Home() {
+export const revalidate = 60;
+
+export default async function Home() {
+  // Fetch collections (with designs) sorted by launch date (desc) and pick the newest
+  const collections = await fetchCollectionsWithDesigns();
+  const latestCollection = collections[0];
+  const trendingDesigns = latestCollection ? latestCollection.designs.slice(0, 8) : [];
+
+  // Fetch all designs (already populated with collection) and pick latest 3 by createdAt
+  const allDesigns = await fetchDesigns();
+  const latestThree = [...allDesigns]
+    .sort((a, b) => {
+      const da = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const db = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return db - da; // newest first
+    })
+    .slice(0, 3);
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen">
+      <Hero />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      {/* Trending section */}
+      <section className="py-16 md:py-24">
+        <SectionHeading
+          eyebrow="Trending"
+          title={
+            <>
+              Explora las colecciones
+              <br />
+              en tendencia
+            </>
+          }
+          subtitle="Diseños que están rompiendo en redes y calles. Ediciones limitadas y estilos que marcan diferencia."
+        />
+        <div className="mx-auto mt-8 grid max-w-7xl grid-cols-1 gap-6 px-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {trendingDesigns.length === 0 ? (
+            <p className="text-sm text-foreground/60">No hay diseños aún.</p>
+          ) : (
+            trendingDesigns.map((d) => (
+              <ProductCard
+                key={d.id}
+                product={{
+                  slug: d.id,
+                  name: d.name,
+                  price: d.price,
+                  image: d.image || '/placeholder.png',
+                  collection: latestCollection?.collection.name,
+                }}
+              />
+            ))
+          )}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </section>
+<Hero2 />
+      {/* New drops */}
+      <section className="pb-20 md:pb-28 py-16 md:py-24">
+        <SectionHeading
+          eyebrow="Nuevos lanzamientos"
+          title="Lo último que llegó"
+          subtitle="Acabados premium, colores vibrantes y materiales resistentes para proteger tu teléfono con estilo."
+        />
+        <div className="mx-auto mt-8 grid max-w-7xl grid-cols-1 gap-6 px-6 sm:grid-cols-2 md:grid-cols-3">
+          {latestThree.map((d) => (
+            <ProductCard
+              key={d.id}
+              product={{
+                slug: d.id,
+                name: d.name,
+                price: d.price,
+                image: d.image || '/placeholder.png',
+                collection: d.collection?.name,
+              }}
+            />
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
