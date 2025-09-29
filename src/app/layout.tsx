@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: {
     default: "VISIONIQ - Cases en tendencia",
-    template: "%s • CaseWave",
+    template: "%s • VISIONIQ",
   },
   description:
     "Discover stylish, protective phone cases. New drops and curated collections for iPhone, Samsung and more.",

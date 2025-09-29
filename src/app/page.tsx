@@ -58,7 +58,7 @@ export default async function Home() {
           )}
         </div>
       </section>
-<Hero2 />
+      <Hero2 />
       {/* New drops */}
       <section className="pb-20 md:pb-28 py-16 md:py-24">
         <SectionHeading
