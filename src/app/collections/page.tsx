@@ -4,7 +4,7 @@ import { fetchCollections } from "@/lib/strapi";
 
 export const metadata = {
   title: "Collections",
-  description: "Explora las colecciones de CaseWave",
+  description: "Explora las colecciones de VISIONIQ",
 };
 
 export const revalidate = 60; // ISR

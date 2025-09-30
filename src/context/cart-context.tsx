@@ -7,12 +7,13 @@ export type CartItem = {
   price: number;
   image: string;
   qty: number;
+  phoneModel?: string; // selected phone model (iPhone 11, etc. or custom)
 };
 
 type CartContextValue = {
   items: CartItem[];
   add: (item: Omit<CartItem, "qty">, qty?: number) => void;
-  remove: (slug: string) => void;
+  remove: (slug: string, phoneModel?: string) => void;
   clear: () => void;
   subtotal: number;
   open: boolean;
@@ -27,10 +28,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const add: CartContextValue["add"] = useCallback((item, qty = 1) => {
     setItems((prev) => {
-      const existing = prev.find((p) => p.slug === item.slug);
+      const existing = prev.find((p) => p.slug === item.slug && p.phoneModel === item.phoneModel);
       if (existing) {
         return prev.map((p) =>
-          p.slug === item.slug ? { ...p, qty: p.qty + qty } : p
+          p.slug === item.slug && p.phoneModel === item.phoneModel ? { ...p, qty: p.qty + qty } : p
         );
       }
       return [...prev, { ...item, qty }];
@@ -38,8 +39,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setOpen(true);
   }, []);
 
-  const remove: CartContextValue["remove"] = useCallback((slug) => {
-    setItems((p) => p.filter((i) => i.slug !== slug));
+  const remove: CartContextValue["remove"] = useCallback((slug, phoneModel) => {
+    setItems((p) => p.filter((i) => !(i.slug === slug && (phoneModel ? i.phoneModel === phoneModel : true))));
   }, []);
 
   const clear = useCallback(() => setItems([]), []);

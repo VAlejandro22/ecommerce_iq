@@ -30,7 +30,7 @@ export function ProductCard({ product }: { product: Product }) {
           <span className="text-sm font-semibold">${product.price.toFixed(2)}</span>
         </div>
         {product.collection && (
-          <p className="mt-1 text-xs text-foreground/60">{product.collection}</p>
+          <p className="mt-1 text-xs text-foreground/60">Colección: {product.collection}</p>
         )}
       </div>
     </Link>

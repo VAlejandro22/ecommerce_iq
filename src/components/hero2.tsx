@@ -1,5 +1,6 @@
 import { Button } from "./ui/button";
 import Image from "next/image";
+import Link from "next/link";
 import { Fredoka } from 'next/font/google'
 
 const fredoka = Fredoka({
@@ -33,12 +34,18 @@ export function Hero2() {
           <h1 className="mt-3 text-6xl font-extrabold tracking-tight md:text-[#fe295e] text-white md:text-8xl">
             LAS
             <br /> CREAMOS
-          </h1>
+            <br /><span className="text-white">CONTIGO</span>
+          </h1>      
+
           <div className="mt-10 flex gap-4 justify-end">
-            <Button className="bg-white md:text-[#fe295e] text-gray-900 hover:bg-white/90 font-bold">Ver colecciones</Button>
-            <Button variant="outline" className="text-white border-white/50 hover:bg-white/10 font-bold">
-              Ver diseños
-            </Button>
+            <Link href="/collections">
+              <Button className="bg-white md:text-[#fe295e] text-gray-900 hover:bg-white/90 font-bold">Ver colecciones</Button>
+            </Link>
+            <Link href="/designs">
+              <Button variant="outline" className="text-white border-white/50 hover:bg-white/10 font-bold">
+                Ver diseños
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

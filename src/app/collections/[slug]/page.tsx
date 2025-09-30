@@ -64,7 +64,7 @@ export default async function CollectionDetail({ params }: { params: { slug: str
                 name: d.name,
                 price: d.price,
                 image: d.image || '/placeholder.png',
-                collection: col.id,
+                collection: col.name,
               }}
             />
           ))

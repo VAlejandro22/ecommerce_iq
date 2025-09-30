@@ -11,9 +11,10 @@ export function CartTrigger() {
   return (
     <button
       onClick={() => setOpen(true)}
-      className="relative rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-medium shadow-sm hover:bg-black/[.05] dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
+      className="relative inline-flex items-center p-1 hover:opacity-80 transition"
+      aria-label="Abrir carrito"
     >
-      Carrito
+      <Image src="/iconos/cart.svg" alt="Carrito" width={26} height={26} priority />
       {count > 0 && (
         <span className="absolute -right-2 -top-2 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-emerald-500 px-1 text-xs font-semibold text-white">
           {count}
@@ -49,16 +50,19 @@ export function CartDrawer() {
         ) : (
           <ul className="flex flex-col gap-4 overflow-y-auto pr-2" style={{ maxHeight: "55vh" }}>
             {items.map((i) => (
-              <li key={i.slug} className="flex gap-4">
+              <li key={`${i.slug}-${i.phoneModel || 'default'}`} className="flex gap-4">
                 <div className="relative h-20 w-16 overflow-hidden rounded-lg border border-black/10">
                   <Image src={i.image} alt={i.name} fill className="object-cover" />
                 </div>
                 <div className="flex-1 text-sm">
                   <p className="font-medium leading-tight">{i.name}</p>
                   <p className="mt-0.5 text-foreground/60">x{i.qty}</p>
+                  {i.phoneModel && (
+                    <p className="mt-0.5 text-xs text-foreground/60">Modelo: {i.phoneModel}</p>
+                  )}
                   <p className="mt-1 font-semibold">${(i.price * i.qty).toFixed(2)}</p>
                   <button
-                    onClick={() => remove(i.slug)}
+                    onClick={() => remove(i.slug, i.phoneModel)}
                     className="mt-1 text-xs text-red-600 hover:underline"
                   >
                     Quitar
@@ -82,6 +86,9 @@ export function CartDrawer() {
             >
               Comprar por WhatsApp
             </a>
+            <p className="text-[11px] leading-snug text-foreground/60 -mt-1">
+              * Un asesor te escribirá para confirmar modelo y método de pago (transferencia o tarjeta) antes de finalizar.
+            </p>
             {items.length > 0 && (
               <button
                 onClick={clear}

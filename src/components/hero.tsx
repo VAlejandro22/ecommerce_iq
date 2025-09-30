@@ -1,5 +1,6 @@
 import { Button } from "./ui/button";
 import Image from "next/image";
+import Link from "next/link";
 import { Fredoka } from 'next/font/google'
 
 const fredoka = Fredoka({
@@ -20,10 +21,14 @@ export function Hero() {
             <br /> CASE
           </h1>
           <div className="mt-10 flex gap-4">
-            <Button className="bg-white text-gray-900 hover:bg-white/90 font-bold">Ver colecciones</Button>
-            <Button variant="outline" className="text-white border-white/50 hover:bg-white/10 font-bold">
-              Ver diseños
-            </Button>
+            <Link href="/collections">
+              <Button className="bg-white text-gray-900 hover:bg-white/90 font-bold">Ver colecciones</Button>
+            </Link>
+            <Link href="/designs">
+              <Button variant="outline" className="text-white border-white/50 hover:bg-white/10 font-bold">
+                Ver diseños
+              </Button>
+            </Link>
           </div>
         </div>
         <div className="relative h-[420px] md:h-[520px] rounded-tl-[140px] rounded-br-[40px] overflow-hidden shadow-xl">

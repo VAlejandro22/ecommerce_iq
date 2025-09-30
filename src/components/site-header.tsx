@@ -27,13 +27,26 @@ export function SiteHeader() {
         </Link>
 
         <div className="ml-auto flex items-center gap-4">
-          <div className="hidden md:flex items-center gap-4 text-sm text-foreground/80">
-            <SunIcon className="h-5 w-5" />
-            <div className="flex items-center gap-1">
-              <PhoneIcon className="h-5 w-5" />
-              <span className="hidden sm:inline">0987632921</span>
+            <div className="hidden md:flex items-center gap-4 text-sm text-foreground/80">
+            <a
+              href="https://www.instagram.com/vision.iq_ec"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 hover:text-foreground"
+            >
+              <Image src="/iconos/instagram.svg" alt="Instagram" width={20} height={20} />
+              <span className="hidden sm:inline">@vision.iq_ec</span>
+            </a>
+            <a
+              href="https://www.tiktok.com/@visioniq_ec"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 hover:text-foreground"
+            >
+              <Image src="/iconos/tiktok.svg" alt="TikTok" width={20} height={20} />
+              <span className="hidden sm:inline">@visioniq_ec</span>
+            </a>
             </div>
-          </div>
           <CartTrigger />
           <Button
             variant="outline"
@@ -72,7 +85,7 @@ export function SiteHeader() {
             { href: "/", label: "Home" },
             { href: "/designs", label: "Diseños" },
             { href: "/collections", label: "Colecciones" },
-            { href: "/contact", label: "Contacto" },
+            // { href: "/contact", label: "Contacto" },
           ].map((item) => (
             <Link
               key={item.href}
@@ -84,12 +97,12 @@ export function SiteHeader() {
             </Link>
           ))}
         </nav>
-        <div className="mt-8 flex gap-3">
+        {/* <div className="mt-8 flex gap-3">
           <Button className="bg-emerald-500 hover:bg-emerald-600">Sign In</Button>
           <Button variant="outline" className="border-emerald-500 text-emerald-400">
             Sign up
           </Button>
-        </div>
+        </div> */}
       </aside>
       <CartDrawer />
     </header>

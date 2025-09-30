@@ -4,7 +4,7 @@ import { fetchDesigns } from "@/lib/strapi";
 
 export const metadata = {
   title: "Designs",
-  description: "Todos los diseños de CaseWave",
+  description: "Todos los diseños de VISIONIQ",
 };
 
 export const revalidate = 60;
@@ -27,7 +27,7 @@ export default async function DesignsPage() {
               name: d.name,
               price: d.price,
               image: d.image || '/placeholder.png',
-              collection: d.collectionId,
+              collection: d.collection?.name,
             }}
           />
         ))}
