@@ -1,6 +1,6 @@
 import { SectionHeading } from "@/components/section-heading";
-import { ProductCard } from "@/components/product-card";
 import { fetchDesigns } from "@/lib/strapi";
+import { DesignsGridClient } from "@/components/designs-grid-client";
 
 export const metadata = {
   title: "Designs",
@@ -11,6 +11,11 @@ export const revalidate = 60;
 
 export default async function DesignsPage() {
   const designs = await fetchDesigns();
+  const sorted = [...designs].sort((a,b)=>{
+    const da = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+    const db = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+    return db - da;
+  });
   return (
     <main className="pb-24 pt-28">
       <SectionHeading
@@ -18,20 +23,7 @@ export default async function DesignsPage() {
         title="Todos los diseños"
         subtitle="Explora todos los estilos. Algunos pertenecen a colecciones, otros son piezas individuales."
       />
-      <div className="mx-auto mt-8 grid max-w-7xl grid-cols-1 gap-6 px-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {designs.map((d) => (
-          <ProductCard
-            key={d.id}
-            product={{
-              slug: d.id,
-              name: d.name,
-              price: d.price,
-              image: d.image || '/placeholder.png',
-              collection: d.collection?.name,
-            }}
-          />
-        ))}
-      </div>
+      <DesignsGridClient designs={sorted} />
     </main>
   );
 }

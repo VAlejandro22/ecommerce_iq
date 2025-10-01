@@ -5,14 +5,18 @@ export function buildWhatsAppLink(productName: string) {
   return `https://wa.me/${WHATSAPP_PHONE}?text=${text}`;
 }
 
-export function buildCartWhatsAppLink(items: { name: string; qty: number; price: number; phoneModel?: string }[], subtotal: number) {
+export function buildCartWhatsAppLink(items: { name: string; qty: number; price: number; phoneModel?: string; effectiveUnitPrice?: number; promoUnits?: number; lineEffectiveTotal?: number }[], promoSubtotal: number) {
   if (!items.length) return buildWhatsAppLink("");
   const lines = [
     "Hola! Quiero comprar estos diseños de VISIONIQ:",
-    ...items.map(
-      (i) => `• ${i.name} (${i.phoneModel || 'Modelo no especificado'}) x${i.qty} = $${(i.price * i.qty).toFixed(2)}`
-    ),
-    `Total: $${subtotal.toFixed(2)}`,
+    ...items.map((i) => {
+      const baseTotal = (i.price * i.qty).toFixed(2);
+      const hasPromo = i.promoUnits && i.promoUnits > 0 && i.lineEffectiveTotal !== undefined;
+      const effectiveTotal = hasPromo ? i.lineEffectiveTotal!.toFixed(2) : baseTotal;
+      const promoTag = hasPromo ? ' (promo)' : '';
+      return `• ${i.name}${promoTag} (${i.phoneModel || 'Modelo no especificado'}) x${i.qty} = $${effectiveTotal}`;
+    }),
+    `Total: $${promoSubtotal.toFixed(2)}`,
     "Nota: El pago se realizará luego de que un asesor confirme el modelo y método (transferencia o tarjeta)."
   ];
   const text = encodeURIComponent(lines.join("\n"));
