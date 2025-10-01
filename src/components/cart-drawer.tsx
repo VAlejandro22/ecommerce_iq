@@ -2,7 +2,6 @@
 import { useCart } from "@/context/cart-context";
 import { buildCartWhatsAppLink } from "@/config";
 import Image from "next/image";
-import Link from "next/link";
 import { buttonStyles } from "./ui/button";
 
 export function CartTrigger() {

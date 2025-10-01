@@ -7,11 +7,10 @@ interface Props {
   onChange: (v: number) => void;
   className?: string;
   options?: number[]; // allowed column counts (e.g. [2,3,4])
-  includeLabels?: boolean;
 }
 
 // Minimal icon button: draws 1,2,3 layout variants via inline SVG blocks
-export function GridLayoutToggle({ value, onChange, className, options = [1,2,3], includeLabels = false }: Props) {
+export function GridLayoutToggle({ value, onChange, className, options = [1,2,3] }: Props) {
   const mapped = options.map(o => ({ cols: o, label: `${o} por fila`, slots: o }));
 
   return (

@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import React from "react";
 import { Button } from "./ui/button";
-import { CloseIcon, MenuIcon, PhoneIcon, SunIcon } from "./icons";
+import { CloseIcon, MenuIcon } from "./icons";
 import { cn } from "@/lib/cn";
 import { CartTrigger, CartDrawer } from "./cart-drawer";
 

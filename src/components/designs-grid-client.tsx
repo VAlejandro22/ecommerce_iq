@@ -3,8 +3,16 @@ import React from 'react';
 import { ProductCard } from '@/components/product-card';
 import { GridLayoutToggle } from '@/components/grid-layout-toggle';
 
+interface DesignItem {
+  id: string;
+  name: string;
+  price: number;
+  image?: string | null;
+  collection?: { name?: string } | null;
+}
+
 interface Props {
-  designs: any[]; // could refine with NormalizedDesign type
+  designs: DesignItem[];
 }
 
 export function DesignsGridClient({ designs }: Props) {

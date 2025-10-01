@@ -1,13 +1,7 @@
 import { Button } from "./ui/button";
 import Image from "next/image";
 import Link from "next/link";
-import { Fredoka } from 'next/font/google'
-
-const fredoka = Fredoka({
-  variable: "--font-fredoka",
-  subsets: ["latin"],
-  weight: ['700'],
-});
+// Font import removed because unused
 
 export function Hero() {
   return (

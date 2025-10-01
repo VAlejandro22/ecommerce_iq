@@ -21,7 +21,7 @@ export default async function CollectionDetail({ params }: { params: { slug: str
   let data;
   try {
     data = await fetchCollection(params.slug);
-  } catch (e) {
+  } catch {
     return notFound();
   }
   const { collection: col, designs } = data;
