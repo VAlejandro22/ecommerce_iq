@@ -9,19 +9,23 @@ export async function generateStaticParams() {
   return [];
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+interface DesignPageParams { params: Promise<{ slug: string }> }
+
+export async function generateMetadata(p: DesignPageParams) {
   try {
-    const d = await fetchDesign(params.slug);
+    const resolved = await p.params;
+    const d = await fetchDesign(resolved.slug);
     return { title: `${d.name} — Diseño`, description: d.description?.slice(0,160) };
   } catch {
     return {};
   }
 }
 
-export default async function DesignDetail({ params }: { params: { slug: string } }) {
+export default async function DesignDetail(p: DesignPageParams) {
   let design;
   try {
-    design = await fetchDesign(params.slug);
+    const resolved = await p.params;
+    design = await fetchDesign(resolved.slug);
   } catch {
     return notFound();
   }

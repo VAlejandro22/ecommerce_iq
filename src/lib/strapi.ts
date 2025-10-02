@@ -114,6 +114,22 @@ export async function fetchCollections() {
   return arr.map(normalizeCollection);
 }
 
+export async function fetchCollectionsPage(page: number, pageSize: number = 24) {
+  if (page < 1) page = 1;
+  type Resp = { data: CollectionDTO[]; meta: { pagination: { page: number; pageSize: number; pageCount: number; total: number } } };
+  const query = new URLSearchParams();
+  query.set('populate', 'imagen');
+  query.set('pagination[page]', String(page));
+  query.set('pagination[pageSize]', String(pageSize));
+  query.set('sort', 'fecha_lanzamiento:desc');
+  const r = await strapiFetch<Resp>('/api/colecciones', query.toString());
+  const arr = Array.isArray(r.data) ? r.data : [r.data];
+  return {
+    collections: arr.map(normalizeCollection),
+    pagination: r.meta.pagination,
+  };
+}
+
 export async function fetchCollection(documentId: string) {
   type Resp = { data: CollectionDTO };
   const r = await strapiFetch<Resp>(`/api/colecciones/${documentId}`, 'populate[0]=imagen&populate[1]=disenos.imagen');
@@ -131,6 +147,25 @@ export async function fetchDesigns() {
   );
   const arr = Array.isArray(r.data) ? r.data : [r.data];
   return arr.map(normalizeDesign);
+}
+
+// Paginated designs fetch
+export async function fetchDesignsPage(page: number, pageSize: number = 24) {
+  if (page < 1) page = 1;
+  type Resp = { data: DesignDTO[]; meta: { pagination: { page: number; pageSize: number; pageCount: number; total: number } } };
+  const query = new URLSearchParams();
+  query.set('populate[0]', 'imagen');
+  query.set('populate[1]', 'coleccion');
+  query.set('populate[2]', 'coleccion.imagen');
+  query.set('pagination[page]', String(page));
+  query.set('pagination[pageSize]', String(pageSize));
+  query.set('sort', 'createdAt:desc');
+  const r = await strapiFetch<Resp>('/api/disenos', query.toString());
+  const arr = Array.isArray(r.data) ? r.data : [r.data];
+  return {
+    designs: arr.map(normalizeDesign),
+    pagination: r.meta.pagination,
+  };
 }
 
 export async function fetchDesign(documentId: string) {
