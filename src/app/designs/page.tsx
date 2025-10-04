@@ -25,11 +25,33 @@ export default async function DesignsPage(props: DesignsPageParams) {
   for (let i = start; i <= end; i++) pages.push(i);
   return (
     <main className="pb-24 pt-28">
+      
+      <div className="w-full mb-5 bg-black text-white dark:bg-white dark:text-black marquee marquee--slow">
+        <div className="mx-auto max-w-7xl overflow-hidden">
+          <div className="marquee__track px-6 py-3 font-medium text-sm">
+            <div className="marquee__content">
+              <span className="mx-8">Envío gratis | Tercer diseño en $1</span>
+              <span className="mx-8">Envío gratis | Tercer diseño en $1</span>
+              <span className="mx-8">Envío gratis | Tercer diseño en $1</span>
+              <span className="mx-8">Envío gratis | Tercer diseño en $1</span>
+              <span className="mx-8">Envío gratis | Tercer diseño en $1</span>
+            </div>
+            <div className="marquee__content" aria-hidden="true">
+              <span className="mx-8">Envío gratis | Tercer diseño en $1</span>
+              <span className="mx-8">Envío gratis | Tercer diseño en $1</span>
+              <span className="mx-8">Envío gratis | Tercer diseño en $1</span>
+              <span className="mx-8">Envío gratis | Tercer diseño en $1</span>
+              <span className="mx-8">Envío gratis | Tercer diseño en $1</span>
+            </div>
+          </div>
+        </div>
+      </div>
       <SectionHeading
         eyebrow="Diseños"
         title="Todos los diseños"
         subtitle="Explora todos los estilos. Algunos pertenecen a colecciones, otros son piezas individuales."
       />
+      
       <DesignsGridClient designs={designs} />
       {pageCount > 1 && (
         <nav className="mx-auto mt-12 flex max-w-7xl items-center justify-center gap-2 px-6" aria-label="Paginación de diseños">

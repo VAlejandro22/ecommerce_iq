@@ -35,6 +35,7 @@ export default function RootLayout({
       >
         <CartProvider>
           <SiteHeader />
+          
           {children}
         </CartProvider>
         <Analytics />
