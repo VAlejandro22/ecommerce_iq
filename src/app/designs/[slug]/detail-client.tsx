@@ -44,7 +44,7 @@ export function DetailClient({ product: p, collection }: DetailClientProps) {
     <main className="pb-24 pt-28">
       <div className="mx-auto max-w-7xl px-6">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-black/10 bg-white">
+          <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-foreground/15 dark:border-white/10 bg-background">
             <Image src={p.image || '/placeholder.png'} alt={p.name} fill className="object-cover" />
           </div>
           <div>
@@ -91,7 +91,7 @@ export function DetailClient({ product: p, collection }: DetailClientProps) {
                   <select
                     value={iphoneModel}
                     onChange={(e) => setIphoneModel(e.target.value)}
-                    className="w-full rounded-md border border-black/20 bg-white p-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:bg-[#1a1a1a]"
+                    className="w-full rounded-md border border-foreground/25 dark:border-white/15 bg-background p-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   >
                     <option value="">Selecciona un modelo</option>
                     {iphoneModels.map(m => <option key={m} value={m}>{m}</option>)}
@@ -106,7 +106,7 @@ export function DetailClient({ product: p, collection }: DetailClientProps) {
                     value={otherModel}
                     onChange={(e) => setOtherModel(e.target.value)}
                     placeholder="Ej: Samsung Galaxy S24"
-                    className="w-full rounded-md border border-black/20 bg-white p-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:bg-[#1a1a1a]"
+                    className="w-full rounded-md border border-foreground/25 dark:border-white/15 bg-background p-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   />
                   <p className="text-xs text-foreground/60">Antes de proceder con el pago, un asesor confirmará si hay stock para ese modelo.</p>
                 </div>

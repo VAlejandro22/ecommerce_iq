@@ -36,10 +36,10 @@ export default async function DesignsPage(props: DesignsPageParams) {
           <a
             href={currentPage > 1 ? createPageLink(currentPage - 1) : undefined}
             aria-disabled={currentPage === 1}
-            className={`px-3 py-2 text-sm rounded-md border ${currentPage === 1 ? 'cursor-not-allowed opacity-40' : 'hover:bg-foreground/5'}`}
+            className={`px-3 py-2 text-sm rounded-md border border-foreground/20 ${currentPage === 1 ? 'cursor-not-allowed opacity-40' : 'hover:bg-foreground/5'}`}
           >Prev</a>
           {pages[0] > 1 && (
-            <a href={createPageLink(1)} className="px-3 py-2 text-sm rounded-md border hover:bg-foreground/5">1</a>
+            <a href={createPageLink(1)} className="px-3 py-2 text-sm rounded-md border border-foreground/20 hover:bg-foreground/5">1</a>
           )}
           {pages[0] > 2 && <span className="px-2 text-sm">…</span>}
           {pages.map(p => (
@@ -47,17 +47,17 @@ export default async function DesignsPage(props: DesignsPageParams) {
               key={p}
               href={createPageLink(p)}
               aria-current={p === currentPage ? 'page' : undefined}
-              className={`px-3 py-2 text-sm rounded-md border ${p === currentPage ? 'bg-black text-white dark:bg-white dark:text-black' : 'hover:bg-foreground/5'}`}
+              className={`px-3 py-2 text-sm rounded-md border border-foreground/20 ${p === currentPage ? 'bg-foreground text-background' : 'hover:bg-foreground/5'}`}
             >{p}</a>
           ))}
           {pages[pages.length -1] < pageCount -1 && <span className="px-2 text-sm">…</span>}
           {pages[pages.length -1] < pageCount && (
-            <a href={createPageLink(pageCount)} className="px-3 py-2 text-sm rounded-md border hover:bg-foreground/5">{pageCount}</a>
+            <a href={createPageLink(pageCount)} className="px-3 py-2 text-sm rounded-md border border-foreground/20 hover:bg-foreground/5">{pageCount}</a>
           )}
           <a
             href={currentPage < pageCount ? createPageLink(currentPage + 1) : undefined}
             aria-disabled={currentPage === pageCount}
-            className={`px-3 py-2 text-sm rounded-md border ${currentPage === pageCount ? 'cursor-not-allowed opacity-40' : 'hover:bg-foreground/5'}`}
+            className={`px-3 py-2 text-sm rounded-md border border-foreground/20 ${currentPage === pageCount ? 'cursor-not-allowed opacity-40' : 'hover:bg-foreground/5'}`}
           >Next</a>
         </nav>
       )}

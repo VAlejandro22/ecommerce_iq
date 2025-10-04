@@ -16,7 +16,7 @@ export function GridLayoutToggle({ value, onChange, className, options = [1,2,3]
   return (
     <div
       className={cn(
-        'inline-flex items-center gap-1 rounded-full border border-foreground/20 bg-white px-2 py-1 dark:bg-[#111] dark:border-white/15',
+        'inline-flex items-center gap-1 rounded-full border border-foreground/20 dark:border-white/15 bg-background px-2 py-1',
         className
       )}
       role="radiogroup"

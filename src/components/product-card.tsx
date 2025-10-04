@@ -15,7 +15,7 @@ export function ProductCard({ product, minimal = false }: { product: Product; mi
     <Link
       href={`/designs/${product.slug}`}
       className={
-        `group block overflow-hidden rounded-3xl border border-black/10 bg-white shadow-sm transition hover:shadow-md ` +
+        `group block overflow-hidden rounded-3xl border border-foreground/15 dark:border-white/10 bg-background shadow-sm transition hover:shadow-md ` +
         (minimal ? 'p-0' : '')
       }
     >

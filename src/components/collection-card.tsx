@@ -7,7 +7,7 @@ export function CollectionCard({ collection, href }: { collection: Collection; h
   return (
     <Link
       href={href}
-      className="group block overflow-hidden rounded-3xl border border-black/10 bg-white shadow-sm"
+      className="group block overflow-hidden rounded-3xl border border-foreground/15 dark:border-white/10 bg-background shadow-sm"
     >
       <div className="relative aspect-[4/3] w-full">
         <Image

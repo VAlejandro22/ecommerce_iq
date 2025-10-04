@@ -87,21 +87,75 @@ function pickBestImage(img?: StrapiImage): { url: string | null; formats?: Strap
   return { url, formats: img.formats };
 }
 
+function isTransientStatus(status?: number) {
+  // Retry on common transient HTTP statuses
+  return !!status && [408, 425, 429, 500, 502, 503, 504].includes(status);
+}
+
+function isTransientError(err: unknown): boolean {
+  // Narrow unknown to an object shape with optional fields
+  const e = err as { code?: string; name?: string; message?: string; cause?: { code?: string; name?: string } } | null | undefined;
+  const code: string | undefined = e?.code ?? e?.cause?.code;
+  const name: string | undefined = e?.name ?? e?.cause?.name;
+  const message: string | undefined = e?.message;
+  // undici/Node fetch timeout and connection resets
+  if (code === 'UND_ERR_CONNECT_TIMEOUT' || code === 'ECONNRESET' || code === 'ETIMEDOUT') return true;
+  // Generic timeouts
+  if (name?.toLowerCase().includes('timeout')) return true;
+  if (message?.toLowerCase().includes('timeout')) return true;
+  return false;
+}
+
+async function fetchWithRetry(url: string, init: RequestInit, { retries = 2, timeoutMs = 6000 }: { retries?: number; timeoutMs?: number }) {
+  let lastErr: unknown;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const res = await fetch(url, { ...init, signal: controller.signal });
+      clearTimeout(timer);
+      if (!res.ok) {
+        if (isTransientStatus(res.status) && attempt < retries) {
+          // small backoff with jitter
+          const backoff = 250 * Math.pow(2, attempt) + Math.random() * 150;
+          await new Promise(r => setTimeout(r, backoff));
+          continue;
+        }
+        throw new Error(`[strapi] ${res.status} ${res.statusText} fetching ${url}`);
+      }
+      return res;
+    } catch (err) {
+      clearTimeout(timer);
+      lastErr = err;
+      if (attempt < retries && isTransientError(err)) {
+        const backoff = 250 * Math.pow(2, attempt) + Math.random() * 150;
+        await new Promise(r => setTimeout(r, backoff));
+        continue;
+      }
+      throw err;
+    }
+  }
+  throw lastErr;
+}
+
 async function strapiFetch<T>(path: string, query?: string, opts: RequestInit = {}): Promise<T> {
   const url = `${API_URL.replace(/\/$/, '')}${path}${query ? (path.includes('?') ? '&' : '?') + query : ''}`;
-  const res = await fetch(url, {
-    ...opts,
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${TOKEN}`,
-      ...(opts.headers || {}),
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...(opts.headers as Record<string, string> | undefined),
+  };
+  if (TOKEN) headers.Authorization = `Bearer ${TOKEN}`;
+
+  const res = await fetchWithRetry(
+    url,
+    {
+      ...opts,
+      headers,
+      // Basic caching: allow ISR to control revalidate outside
+      next: { revalidate: 60 },
     },
-    // Basic caching: allow ISR to control revalidate outside
-    next: { revalidate: 60 },
-  });
-  if (!res.ok) {
-    throw new Error(`[strapi] ${res.status} ${res.statusText} fetching ${url}`);
-  }
+    { retries: 2, timeoutMs: 6000 }
+  );
   const json = await res.json();
   return json as T;
 }
@@ -109,9 +163,14 @@ async function strapiFetch<T>(path: string, query?: string, opts: RequestInit = 
 // Collections
 export async function fetchCollections() {
   type Resp = { data: CollectionDTO[] } | { data: CollectionDTO };
-  const r = await strapiFetch<Resp>('/api/colecciones', 'populate=imagen');
-  const arr = Array.isArray(r.data) ? r.data : [r.data];
-  return arr.map(normalizeCollection);
+  try {
+    const r = await strapiFetch<Resp>('/api/colecciones', 'populate=imagen');
+    const arr = Array.isArray(r.data) ? r.data : [r.data];
+    return arr.map(normalizeCollection);
+  } catch (err) {
+    console.warn('[strapi] fetchCollections failed, returning empty list:', err);
+    return [];
+  }
 }
 
 export async function fetchCollectionsPage(page: number, pageSize: number = 24) {
@@ -122,12 +181,20 @@ export async function fetchCollectionsPage(page: number, pageSize: number = 24) 
   query.set('pagination[page]', String(page));
   query.set('pagination[pageSize]', String(pageSize));
   query.set('sort', 'fecha_lanzamiento:desc');
-  const r = await strapiFetch<Resp>('/api/colecciones', query.toString());
-  const arr = Array.isArray(r.data) ? r.data : [r.data];
-  return {
-    collections: arr.map(normalizeCollection),
-    pagination: r.meta.pagination,
-  };
+  try {
+    const r = await strapiFetch<Resp>('/api/colecciones', query.toString());
+    const arr = Array.isArray(r.data) ? r.data : [r.data];
+    return {
+      collections: arr.map(normalizeCollection),
+      pagination: r.meta.pagination,
+    };
+  } catch (err) {
+    console.warn('[strapi] fetchCollectionsPage failed, returning empty page:', err);
+    return {
+      collections: [],
+      pagination: { page, pageSize, pageCount: 1, total: 0 },
+    };
+  }
 }
 
 export async function fetchCollection(documentId: string) {
@@ -141,12 +208,17 @@ export async function fetchCollection(documentId: string) {
 // Designs
 export async function fetchDesigns() {
   type Resp = { data: DesignDTO[] } | { data: DesignDTO };
-  const r = await strapiFetch<Resp>(
-    '/api/disenos',
-    'populate[0]=imagen&populate[1]=coleccion&populate[2]=coleccion.imagen'
-  );
-  const arr = Array.isArray(r.data) ? r.data : [r.data];
-  return arr.map(normalizeDesign);
+  try {
+    const r = await strapiFetch<Resp>(
+      '/api/disenos',
+      'populate[0]=imagen&populate[1]=coleccion&populate[2]=coleccion.imagen'
+    );
+    const arr = Array.isArray(r.data) ? r.data : [r.data];
+    return arr.map(normalizeDesign);
+  } catch (err) {
+    console.warn('[strapi] fetchDesigns failed, returning empty list:', err);
+    return [];
+  }
 }
 
 // Paginated designs fetch
@@ -160,12 +232,20 @@ export async function fetchDesignsPage(page: number, pageSize: number = 24) {
   query.set('pagination[page]', String(page));
   query.set('pagination[pageSize]', String(pageSize));
   query.set('sort', 'createdAt:desc');
-  const r = await strapiFetch<Resp>('/api/disenos', query.toString());
-  const arr = Array.isArray(r.data) ? r.data : [r.data];
-  return {
-    designs: arr.map(normalizeDesign),
-    pagination: r.meta.pagination,
-  };
+  try {
+    const r = await strapiFetch<Resp>('/api/disenos', query.toString());
+    const arr = Array.isArray(r.data) ? r.data : [r.data];
+    return {
+      designs: arr.map(normalizeDesign),
+      pagination: r.meta.pagination,
+    };
+  } catch (err) {
+    console.warn('[strapi] fetchDesignsPage failed, returning empty page:', err);
+    return {
+      designs: [],
+      pagination: { page, pageSize, pageCount: 1, total: 0 },
+    };
+  }
 }
 
 export async function fetchDesign(documentId: string) {
@@ -194,12 +274,17 @@ export function normalizeCollection(c: CollectionDTO): NormalizedCollection {
 // Helper: fetch collections with designs (for home trending by latest launch date)
 export async function fetchCollectionsWithDesigns() {
   type Resp = { data: CollectionDTO[] } | { data: CollectionDTO };
-  const r = await strapiFetch<Resp>(
-    '/api/colecciones',
-    'populate[0]=imagen&populate[1]=disenos.imagen&sort=fecha_lanzamiento:desc'
-  );
-  const arr = Array.isArray(r.data) ? r.data : [r.data];
-  return arr.map(c => ({ collection: normalizeCollection(c), designs: (c.disenos||[]).map(normalizeDesign) }));
+  try {
+    const r = await strapiFetch<Resp>(
+      '/api/colecciones',
+      'populate[0]=imagen&populate[1]=disenos.imagen&sort=fecha_lanzamiento:desc'
+    );
+    const arr = Array.isArray(r.data) ? r.data : [r.data];
+    return arr.map(c => ({ collection: normalizeCollection(c), designs: (c.disenos||[]).map(normalizeDesign) }));
+  } catch (err) {
+    console.warn('[strapi] fetchCollectionsWithDesigns failed, returning empty list:', err);
+    return [] as Array<{ collection: NormalizedCollection; designs: NormalizedDesign[] }>;
+  }
 }
 
 export function normalizeDesign(d: DesignDTO): NormalizedDesign {

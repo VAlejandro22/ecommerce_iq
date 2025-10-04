@@ -9,18 +9,20 @@ export async function generateStaticParams() {
   return cols.map((c) => ({ slug: c.id }));
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const resolved = await params;
   // Metadata will be refined in page using dynamic fetch if needed.
   // Here minimal info to avoid extra fetch; full description inside component.
-  return { title: `Colección ${params.slug}` };
+  return { title: `Colección ${resolved.slug}` };
 }
 
 export const revalidate = 60;
 
-export default async function CollectionDetail({ params }: { params: { slug: string } }) {
+export default async function CollectionDetail({ params }: { params: Promise<{ slug: string }> }) {
+  const resolved = await params;
   let data;
   try {
-    data = await fetchCollection(params.slug);
+    data = await fetchCollection(resolved.slug);
   } catch {
     return notFound();
   }

@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import Image from "next/image";
 import React from "react";
 import { Button } from "./ui/button";
 import { CloseIcon, MenuIcon } from "./icons";
@@ -13,28 +12,37 @@ export function SiteHeader() {
     <header className="fixed left-0 right-0 top-4 z-40 flex justify-center">
       <div className="flex h-20 w-11/12 items-center gap-6 rounded-full bg-background/90 px-6 shadow-md backdrop-blur supports-[backdrop-filter]:bg-background/70">
         <Link href="/" className="flex items-center gap-2">
-          {/* <div className="h-8 w-8 rounded-xl bg-foreground/90 text-background grid place-items-center">
-            <span className="text-sm font-bold">V</span>
-          </div>
-          <span className="font-semibold">VISIONIQ</span> */}
-          <Image
-            src="/logo.png"
-            alt="Logo"
-            width={120}
-            height={40}
-            className="object-contain"
-          />
+          <picture>
+            <source srcSet="/logo2.png" media="(prefers-color-scheme: dark)" />
+            <img
+              src="/logo.png"
+              alt="Logo"
+              width={120}
+              height={40}
+              className="object-contain"
+            />
+          </picture>
         </Link>
 
         <div className="ml-auto flex items-center gap-4">
-            <div className="hidden md:flex items-center gap-4 text-sm text-foreground/80">
+          <div className="hidden md:flex items-center gap-4 text-sm text-foreground/80">
             <a
               href="https://www.instagram.com/vision.iq_ec"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 hover:text-foreground"
             >
-              <Image src="/iconos/instagram.svg" alt="Instagram" width={20} height={20} />
+              {/* <Image src="/iconos/instagram.svg" alt="Instagram" width={20} height={20} /> */}
+              <picture>
+                <source srcSet="/iconos/instagram2.svg" media="(prefers-color-scheme: dark)" />
+                <img
+                  src="/iconos/instagram.svg"
+                  alt="Logo instagram"
+                  width={20}
+                  height={20}
+                  className="object-contain"
+                />
+              </picture>
               <span className="hidden sm:inline">@vision.iq_ec</span>
             </a>
             <a
@@ -43,10 +51,20 @@ export function SiteHeader() {
               rel="noopener noreferrer"
               className="flex items-center gap-1 hover:text-foreground"
             >
-              <Image src="/iconos/tiktok.svg" alt="TikTok" width={20} height={20} />
+              {/* <Image src="/iconos/tiktok.svg" alt="TikTok" width={20} height={20} /> */}
+              <picture>
+                <source srcSet="/iconos/tiktok2.svg" media="(prefers-color-scheme: dark)" />
+                <img
+                  src="/iconos/tiktok.svg"
+                  alt="Logo tiktok"
+                  width={20}
+                  height={20}
+                  className="object-contain"
+                />
+              </picture>
               <span className="hidden sm:inline">@visioniq_ec</span>
             </a>
-            </div>
+          </div>
           <CartTrigger />
           <Button
             variant="outline"

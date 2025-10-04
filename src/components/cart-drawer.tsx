@@ -13,7 +13,17 @@ export function CartTrigger() {
       className="relative inline-flex items-center p-1 hover:opacity-80 transition"
       aria-label="Abrir carrito"
     >
-      <Image src="/iconos/cart.svg" alt="Carrito" width={26} height={26} priority />
+      {/* <Image src="/iconos/cart.svg" alt="Carrito" width={26} height={26} priority /> */}
+      <picture>
+        <source srcSet="/iconos/cart2.svg" media="(prefers-color-scheme: dark)" />
+        <img
+          src="/iconos/cart.svg"
+          alt="Carrito"
+          width={26}
+          height={26}
+          className="object-contain"
+        />
+      </picture>
       {count > 0 && (
         <span className="absolute -right-2 -top-2 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-emerald-500 px-1 text-xs font-semibold text-white">
           {count}
@@ -36,7 +46,7 @@ export function CartDrawer() {
         onClick={() => setOpen(false)}
       />
       <aside
-        className={`absolute right-0 top-0 h-full w-full max-w-md bg-white p-6 shadow-xl transition-transform dark:bg-[#111] ${open ? "translate-x-0" : "translate-x-full"}`}
+        className={`absolute right-0 top-0 h-full w-full max-w-md bg-background p-6 shadow-xl transition-transform ${open ? "translate-x-0" : "translate-x-full"}`}
       >
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-xl font-semibold">Tu carrito</h2>
@@ -50,7 +60,7 @@ export function CartDrawer() {
           <ul className="flex flex-col gap-4 overflow-y-auto pr-2" style={{ maxHeight: "55vh" }}>
             {pricedItems.map((i) => (
               <li key={`${i.slug}-${i.phoneModel || 'default'}`} className="flex gap-4">
-                <div className="relative h-20 w-16 overflow-hidden rounded-lg border border-black/10">
+                <div className="relative h-20 w-16 overflow-hidden rounded-lg border border-foreground/15 dark:border-white/10">
                   <Image src={i.image} alt={i.name} fill className="object-cover" />
                 </div>
                 <div className="flex-1 text-sm">
