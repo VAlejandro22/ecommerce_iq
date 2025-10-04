@@ -103,6 +103,7 @@ export function SiteHeader() {
             { href: "/", label: "Home" },
             { href: "/designs", label: "Diseños" },
             { href: "/collections", label: "Colecciones" },
+            { href: "/iqchat", label: "IQchat" },
             // { href: "/contact", label: "Contacto" },
           ].map((item) => (
             <Link
