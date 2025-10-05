@@ -7,13 +7,28 @@ import { fetchCollectionsWithDesigns, fetchDesigns } from "@/lib/strapi";
 export const revalidate = 60;
 
 export default async function Home() {
-  // Fetch collections (with designs) sorted by launch date (desc) and pick the newest
-  const collections = await fetchCollectionsWithDesigns();
-  const latestCollection = collections[0];
-  const trendingDesigns = latestCollection ? latestCollection.designs.slice(0, 8) : [];
+  // Fetch in parallel for better perf
+  const [collections, allDesigns] = await Promise.all([
+    fetchCollectionsWithDesigns(),
+    fetchDesigns(),
+  ]);
 
-  // Fetch all designs (already populated with collection) and pick latest 3 by createdAt
-  const allDesigns = await fetchDesigns();
+  // Pick the first collection that actually has designs; fallback to the newest
+  const selectedCollection = collections.find(c => (c.designs?.length || 0) > 0) ?? collections[0];
+  let trendingDesigns = selectedCollection?.designs?.slice(0, 8) ?? [];
+  // As a safety net (in case the newest live collection is momentarily empty due to cache/ISR),
+  // fallback to latest overall designs so the section never renders empty in production.
+  if (trendingDesigns.length === 0 && allDesigns.length > 0) {
+    trendingDesigns = [...allDesigns]
+      .sort((a, b) => {
+        const da = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const db = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return db - da;
+      })
+      .slice(0, 8);
+  }
+
+  // Latest 3 for the “Nuevos lanzamientos” section
   const latestThree = [...allDesigns]
     .sort((a, b) => {
       const da = a.createdAt ? new Date(a.createdAt).getTime() : 0;
@@ -51,7 +66,7 @@ export default async function Home() {
                   name: d.name,
                   price: d.price,
                   image: d.image || '/placeholder.png',
-                  collection: latestCollection?.collection.name,
+                  collection: selectedCollection?.collection.name ?? d.collection?.name,
                 }}
               />
             ))
