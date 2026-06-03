@@ -27,7 +27,7 @@ export default function IQChatPage() {
               <input
                 aria-label="Describe tu estuche ideal"
                 placeholder="¿Qué estuche buscas? Colores, formas, vibra…"
-                className="w-full rounded-xl border border-foreground/20 bg-background px-4 py-3 text-sm outline-none ring-emerald-500/30 transition focus:border-emerald-400/60 focus:ring-4 disabled:opacity-60"
+                className="w-full rounded-xl border border-foreground/20 bg-background px-4 py-3 text-sm outline-none ring-[#d4ff00]/30 transition focus:border-emerald-400/60 focus:ring-4 disabled:opacity-60"
                 disabled
               />
             </div>
@@ -43,7 +43,7 @@ export default function IQChatPage() {
 
         <div className="mx-auto mt-4 w-full max-w-2xl px-4">
           <div className="grid grid-cols-2 gap-4">
-            {[1,2].map((i) => (
+            {[1, 2].map((i) => (
               <div key={i} className="overflow-hidden rounded-2xl border border-foreground/15 bg-background shadow-sm">
                 <div className="aspect-[4/5] w-full animate-pulse bg-foreground/5" />
                 <div className="p-3">
@@ -74,7 +74,7 @@ export default function IQChatPage() {
                   Genial. Esto es lo que encontré basado en tu descripción…
                   <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                     {/* Skeleton cards to hint results */}
-                    {[1,2,3,4].map((i) => (
+                    {[1, 2, 3, 4].map((i) => (
                       <div key={i} className="group relative overflow-hidden rounded-xl border border-foreground/15 bg-background shadow-sm">
                         <div className="h-24 sm:h-28 w-full animate-pulse bg-foreground/5" />
                         <div className="p-3">
@@ -97,7 +97,7 @@ export default function IQChatPage() {
                 <input
                   aria-label="Describe tu estuche ideal"
                   placeholder="Describe tu estuche ideal… (colores, formas, vibra)"
-                  className="w-full rounded-xl border border-foreground/20 bg-background px-4 py-3 text-sm outline-none ring-emerald-500/30 transition focus:border-emerald-400/60 focus:ring-4 disabled:opacity-60"
+                  className="w-full rounded-xl border border-foreground/20 bg-background px-4 py-3 text-sm outline-none ring-[#d4ff00]/30 transition focus:border-emerald-400/60 focus:ring-4 disabled:opacity-60"
                   disabled
                 />
                 {/* typing dots animation hint */}
@@ -131,8 +131,8 @@ export default function IQChatPage() {
           <p className="mt-3 max-w-xl text-white/80">
             Estamos preparando IQchat para ayudarte a encontrar el estuche perfecto para ti y tu celular.
           </p>
-          <br/>
-            <span className="text-sm font-bold text-black dark:text-white">ÚNICOS EN EL MUNDO, COMO TÚ</span>
+          <br />
+          <span className="text-sm font-bold text-black dark:text-white">ÚNICOS EN EL MUNDO, COMO TÚ</span>
         </div>
       </div>
 
@@ -148,7 +148,7 @@ export default function IQChatPage() {
           </h3>
           <p className="mt-3 max-w-xl text-white/80">
             Estamos preparando IQchat para ayudarte a encontrar el estuche perfecto para ti.
-            <br/>
+            <br />
             <span className="text-sm font-bold text-black dark:text-white">ÚNICOS EN EL MUNDO, COMO TÚ</span>
           </p>
         </div>

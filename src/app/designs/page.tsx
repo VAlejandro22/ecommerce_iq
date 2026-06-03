@@ -26,17 +26,17 @@ export default async function DesignsPage(props: DesignsPageParams) {
   return (
     <main className="pb-24 pt-28">
       
-      <div className="w-full mb-5 bg-black text-white dark:bg-white dark:text-black marquee marquee--slow">
+      <div className="w-full mb-5 bg-black text-white dark:bg-white dark:text-black overflow-hidden select-none">
         <div className="mx-auto max-w-7xl overflow-hidden">
-          <div className="marquee__track px-6 py-3 font-medium text-sm">
-            <div className="marquee__content">
+          <div className="flex w-max animate-marquee-slide px-6 py-3 font-medium text-sm [will-change:transform] transform-gpu">
+            <div className="flex whitespace-nowrap">
               <span className="mx-8">Envío gratis | Tercer diseño en $1</span>
               <span className="mx-8">Envío gratis | Tercer diseño en $1</span>
               <span className="mx-8">Envío gratis | Tercer diseño en $1</span>
               <span className="mx-8">Envío gratis | Tercer diseño en $1</span>
               <span className="mx-8">Envío gratis | Tercer diseño en $1</span>
             </div>
-            <div className="marquee__content" aria-hidden="true">
+            <div className="flex whitespace-nowrap" aria-hidden="true">
               <span className="mx-8">Envío gratis | Tercer diseño en $1</span>
               <span className="mx-8">Envío gratis | Tercer diseño en $1</span>
               <span className="mx-8">Envío gratis | Tercer diseño en $1</span>

@@ -34,6 +34,8 @@ export interface CollectionDTO {
   precio: number | null;
   fecha_lanzamiento?: string | null;
   imagen?: StrapiImage;
+  portada_3_4?: StrapiImage;
+  portada_4_3?: StrapiImage;
   disenos?: DesignDTO[];
 }
 
@@ -59,6 +61,8 @@ export interface NormalizedCollection {
   description: string | null;
   price?: number | null;
   image: string | null; // best image url
+  portada_3_4: string | null;
+  portada_4_3: string | null;
   imageFormats?: StrapiImage['formats'];
   launchDate?: string | null;
 }
@@ -164,7 +168,7 @@ async function strapiFetch<T>(path: string, query?: string, opts: RequestInit = 
 export async function fetchCollections() {
   type Resp = { data: CollectionDTO[] } | { data: CollectionDTO };
   try {
-    const r = await strapiFetch<Resp>('/api/colecciones', 'populate=imagen');
+    const r = await strapiFetch<Resp>('/api/colecciones', 'populate[0]=imagen&populate[1]=portada_3_4&populate[2]=portada_4_3');
     const arr = Array.isArray(r.data) ? r.data : [r.data];
     return arr.map(normalizeCollection);
   } catch (err) {
@@ -177,7 +181,9 @@ export async function fetchCollectionsPage(page: number, pageSize: number = 24) 
   if (page < 1) page = 1;
   type Resp = { data: CollectionDTO[]; meta: { pagination: { page: number; pageSize: number; pageCount: number; total: number } } };
   const query = new URLSearchParams();
-  query.set('populate', 'imagen');
+  query.set('populate[0]', 'imagen');
+  query.set('populate[1]', 'portada_3_4');
+  query.set('populate[2]', 'portada_4_3');
   query.set('pagination[page]', String(page));
   query.set('pagination[pageSize]', String(pageSize));
   query.set('sort', 'fecha_lanzamiento:desc');
@@ -199,7 +205,7 @@ export async function fetchCollectionsPage(page: number, pageSize: number = 24) 
 
 export async function fetchCollection(documentId: string) {
   type Resp = { data: CollectionDTO };
-  const r = await strapiFetch<Resp>(`/api/colecciones/${documentId}`, 'populate[0]=imagen&populate[1]=disenos.imagen');
+  const r = await strapiFetch<Resp>(`/api/colecciones/${documentId}`, 'populate[0]=imagen&populate[1]=portada_3_4&populate[2]=portada_4_3&populate[3]=disenos.imagen');
   const c = normalizeCollection(r.data);
   const designs = (r.data.disenos || []).map(normalizeDesign);
   return { collection: c, designs };
@@ -260,12 +266,16 @@ export async function fetchDesign(documentId: string) {
 // Normalizers
 export function normalizeCollection(c: CollectionDTO): NormalizedCollection {
   const { url, formats } = pickBestImage(c.imagen);
+  const p34 = c.portada_3_4?.url || null;
+  const p43 = c.portada_4_3?.url || null;
   return {
     id: c.documentId,
     name: c.nombre,
     description: c.descripcion || null,
     price: c.precio ?? null,
     image: url,
+    portada_3_4: p34,
+    portada_4_3: p43,
     imageFormats: formats,
     launchDate: c.fecha_lanzamiento || null,
   };
@@ -277,7 +287,7 @@ export async function fetchCollectionsWithDesigns() {
   try {
     const r = await strapiFetch<Resp>(
       '/api/colecciones',
-      'populate[0]=imagen&populate[1]=disenos.imagen&sort=fecha_lanzamiento:desc'
+      'populate[0]=imagen&populate[1]=portada_3_4&populate[2]=portada_4_3&populate[3]=disenos.imagen&sort=fecha_lanzamiento:desc'
     );
     const arr = Array.isArray(r.data) ? r.data : [r.data];
     return arr.map(c => ({ collection: normalizeCollection(c), designs: (c.disenos||[]).map(normalizeDesign) }));

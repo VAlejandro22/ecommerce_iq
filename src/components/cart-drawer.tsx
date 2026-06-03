@@ -14,18 +14,15 @@ export function CartTrigger() {
       aria-label="Abrir carrito"
     >
       {/* <Image src="/iconos/cart.svg" alt="Carrito" width={26} height={26} priority /> */}
-      <picture>
-        <source srcSet="/iconos/cart2.svg" media="(prefers-color-scheme: dark)" />
-        <img
-          src="/iconos/cart.svg"
-          alt="Carrito"
-          width={26}
-          height={26}
-          className="object-contain"
-        />
-      </picture>
+      <img
+        src="/iconos/cart.svg"
+        alt="Carrito"
+        width={26}
+        height={26}
+        className="object-contain"
+      />
       {count > 0 && (
-        <span className="absolute -right-2 -top-2 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-emerald-500 px-1 text-xs font-semibold text-white">
+        <span className="absolute -right-2 -top-2 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[#d4ff00] px-1 text-xs font-semibold text-white">
           {count}
         </span>
       )}
@@ -42,11 +39,11 @@ export function CartDrawer() {
       aria-hidden={!open}
     >
       <div
-        className={`absolute inset-0 bg-black/50 transition-opacity ${open ? "opacity-100" : "opacity-0"}`}
+        className={`fixed inset-0 bg-black/50 transition-opacity duration-300 ${open ? "opacity-100" : "opacity-0"}`}
         onClick={() => setOpen(false)}
       />
       <aside
-        className={`absolute right-0 top-0 h-full w-full max-w-md bg-background p-6 shadow-xl transition-transform ${open ? "translate-x-0" : "translate-x-full"}`}
+        className={`fixed right-0 top-0 h-full w-full max-w-md bg-background p-6 shadow-xl transition-transform duration-300 ease-in-out ${open ? "translate-x-0" : "translate-x-full"}`}
       >
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-xl font-semibold">Tu carrito</h2>
@@ -57,7 +54,7 @@ export function CartDrawer() {
         {items.length === 0 ? (
           <p className="text-sm text-foreground/60">Aún no agregaste diseños.</p>
         ) : (
-          <ul className="flex flex-col gap-4 overflow-y-auto pr-2" style={{ maxHeight: "55vh" }}>
+          <ul className="flex flex-col gap-4 overflow-y-auto pr-2 max-h-[55dvh]">
             {pricedItems.map((i) => (
               <li key={`${i.slug}-${i.phoneModel || 'default'}`} className="flex gap-4">
                 <div className="relative h-20 w-16 overflow-hidden rounded-lg border border-foreground/15 dark:border-white/10">

@@ -1,71 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import "tailwindcss";
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  color-scheme: light;
+}
+
+html {
+  background-color: #ffffff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: 'Pragmatica', 'Barlow', sans-serif;
   --font-mono: var(--font-geist-mono);
-}
+  --font-display: 'Termina', 'Barlow', sans-serif, 'Arial';
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* Museum Custom Fonts */
+  --font-outfit: 'Outfit', sans-serif;
+  --font-playfair: 'Playfair Display', serif;
+
+  /* Custom Shadow for Museum Cards - Tailwind Integrated */
+  --shadow-museum-card: 0 30px 60px -15px rgba(0, 0, 0, 0.9), 0 0 50px -10px rgba(16, 185, 129, 0.08);
+
+  /* Seamless marquee animation config */
+  --animate-marquee-slide: marquee-slide 28s linear infinite;
+
+  @keyframes marquee-slide {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
   }
 }
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 body {
-  background: var(--background);
+  background: #ffffff;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Pragmatica', 'Barlow', sans-serif;
+  -webkit-tap-highlight-color: transparent; /* Premium touch feel on mobile Safari */
 }
 
-/* Marquee utilities */
-@keyframes marquee-right {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-.marquee {
-  overflow: hidden;
-  --marquee-duration: 12s;
-}
-.marquee__inner {
-  display: inline-block;
-  white-space: nowrap;
-  animation: marquee-right var(--marquee-duration) linear infinite;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Termina', 'Barlow', sans-serif, 'Arial';
 }
 
-/* Seamless marquee (duplicated track) */
-@keyframes marquee-slide {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-.marquee__track {
-  display: flex;
-  width: max-content;
-  animation: marquee-slide var(--marquee-duration) linear infinite;
-}
-.marquee__content {
-  display: flex;
-  white-space: nowrap;
-}
-.marquee--slow {
-  --marquee-duration: 28s;
-}
+/* Custom Utilities integrated with Tailwind v4 */
 
-@media (prefers-reduced-motion: reduce) {
-  .marquee__inner {
-    animation-duration: 0s;
-    animation-iteration-count: 1;
-    transform: translateX(0);
+/* Hide scrollbars & ensure smooth momentum scrolling on iOS Safari */
+@utility scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  &::-webkit-scrollbar {
+    display: none;
   }
-  .marquee__track {
-    animation: none;
-    transform: translateX(0);
-  }
+}
+
+/* Glassmorphism style for curatorial cards, Safari optimized */
+@utility glass-museum-card {
+  background: rgba(26, 26, 26, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Radial light spotlights, hardware accelerated */
+@utility radial-glow-spotlight {
+  background: radial-gradient(circle at center, rgba(16, 185, 129, 0.12) 0%, rgba(0, 0, 0, 0) 70%);
+  transform: translate3d(0, 0, 0); /* Force GPU render on Safari */
+}
+
+/* Ambient spotlight beam, Safari clip-path compatibility fix */
+@utility light-beam {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0) 100%);
+  clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%);
+  -webkit-clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%);
+  transform: translate3d(0, 0, 0); /* Force GPU render on Safari */
 }

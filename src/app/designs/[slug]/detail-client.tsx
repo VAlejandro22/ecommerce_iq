@@ -56,7 +56,7 @@ export function DetailClient({ product: p, collection }: DetailClientProps) {
                 Pertenece a la colección {" "}
                 <Link
                   href={`/collections/${collection.slug}`}
-                  className="font-medium text-emerald-600 underline-offset-4 hover:underline"
+                  className="font-medium text-[#d4ff00] underline-offset-4 hover:underline"
                 >
                   {collection.name}
                 </Link>
@@ -91,7 +91,7 @@ export function DetailClient({ product: p, collection }: DetailClientProps) {
                   <select
                     value={iphoneModel}
                     onChange={(e) => setIphoneModel(e.target.value)}
-                    className="w-full rounded-md border border-foreground/25 dark:border-white/15 bg-background p-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full rounded-md border border-foreground/25 dark:border-white/15 bg-background p-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#d4ff00]"
                   >
                     <option value="">Selecciona un modelo</option>
                     {iphoneModels.map(m => <option key={m} value={m}>{m}</option>)}
@@ -106,7 +106,7 @@ export function DetailClient({ product: p, collection }: DetailClientProps) {
                     value={otherModel}
                     onChange={(e) => setOtherModel(e.target.value)}
                     placeholder="Ej: Samsung Galaxy S24"
-                    className="w-full rounded-md border border-foreground/25 dark:border-white/15 bg-background p-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full rounded-md border border-foreground/25 dark:border-white/15 bg-background p-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#d4ff00]"
                   />
                   <p className="text-xs text-foreground/60">Antes de proceder con el pago, un asesor confirmará si hay stock para ese modelo.</p>
                 </div>

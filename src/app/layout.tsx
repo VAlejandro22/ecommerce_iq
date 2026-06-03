@@ -23,6 +23,16 @@ export const metadata: Metadata = {
     "Discover stylish, protective phone cases. New drops and curated collections for iPhone, Samsung and more.",
 };
 
+export const viewport = {
+  colorScheme: "light" as const,
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover" as const,
+  themeColor: "#ffffff",
+};
+
+import { SiteFooter } from "@/components/site-footer";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -36,7 +46,11 @@ export default function RootLayout({
         <CartProvider>
           <SiteHeader />
           
-          {children}
+          <main className="min-h-[85dvh]">
+            {children}
+          </main>
+
+          <SiteFooter />
         </CartProvider>
         <Analytics />
       </body>
